@@ -26,5 +26,23 @@ namespace RmBackend.Controllers
         {
             return View();
         }
+
+        [HttpGet("courselist")]
+        public IActionResult CourseList()
+        {
+            return View();
+        }
+
+        [HttpGet("personal")]
+        public IActionResult Personal()
+        {
+            return View();
+        }
+
+        [HttpGet("course")]
+        public IActionResult Course()
+        {
+            return View();
+        }
     }
 }
