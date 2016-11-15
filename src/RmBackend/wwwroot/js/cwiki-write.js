@@ -1,5 +1,6 @@
 ﻿var subjects = [];
 var courses = [];
+var converter = new showdown.Converter();
 
 function disableForm() {
     $('#mainform :input').prop('disabled', true);
@@ -9,6 +10,20 @@ function enableForm() {
     $('#mainform input, #mainform textarea, #mainform button').prop('disabled', false);
     if (!isUpdate) {
         $('#mainform select').prop('disabled', false);
+    }
+}
+
+function preview() {
+    var btn = $('#previewToggle');
+    if (btn.text() === 'Preview') {
+        $('#contentGroup').hide();
+        $('#previewBox').html(converter.makeHtml($('#content').get(0).value));
+        $('#previewGroup').show();
+        btn.text('Write');
+    } else {
+        $('#contentGroup').show();
+        $('#previewGroup').hide();
+        btn.text('Preview');
     }
 }
 

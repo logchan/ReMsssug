@@ -15,3 +15,11 @@ body {
   height: 60px;
   background-color: #f5f5f5;
 }
+
+.md-preview {
+    margin:12px; 
+    border: dashed;
+    border-color: gray;
+    border-width: 1px;
+    border-radius: 4px;
+}
