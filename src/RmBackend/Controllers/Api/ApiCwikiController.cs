@@ -45,7 +45,7 @@ namespace RmBackend.Controllers.Api
             var query = from r in _context.CourseReviews
                 where r.Status == PostStatus.Posted
                 orderby r.ModifyTime descending
-                select new {r.Course, r.Title, r.User};
+                select new {r.Course, r.Title, r.CourseReviewId};
 
             return Json(query.Take(10).ToList());
         }
@@ -62,7 +62,7 @@ namespace RmBackend.Controllers.Api
             var rquery = from r in _context.CourseReviews
                          where entries.Contains(r.CommentEntryNumber)
                          orderby entries.IndexOf(r.CommentEntryNumber)
-                         select r;
+                         select new {r.Course, r.Title, r.CourseReviewId};
 
             return Json(rquery.ToList());
         }

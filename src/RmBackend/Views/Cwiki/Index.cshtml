@@ -1,3 +1,39 @@
 ﻿@{
     ViewBag.Title = "Cwiki Home";
 }
+
+<div class="row">
+    <h2>Cwiki Home</h2>
+    <h5>Re:MSSSUG Cwiki</h5>
+    <hr />
+</div>
+
+<div class="row">
+    <p id="msg" class="col-md-12 alert alert-info">Loading data...</p>
+    <p id="errmsg" class="col-md-12 alert alert-danger" style="display: none;"></p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h3>Portal</h3>
+        <a href="@Url.Action("Courses", "Cwiki")" class="btn btn-default">Courses</a>
+        <a href="@Url.Action("Personal", "Cwiki")" class="btn btn-default">My Cwiki</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Latest Reviews</h3>
+        <ul id="latestReview" class="review-list">
+            
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h3>Latest Commented</h3>
+        <ul id="latestComment" class="review-list">
+            
+        </ul>
+    </div>
+</div>
+
+<script src="~/js/cwiki-home.js"></script>
