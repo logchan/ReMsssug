@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using RmBackend.Access;
 using RmBackend.Framework;
 using RmBackend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace RmBackend.Controllers.Api
 {
@@ -69,7 +70,7 @@ namespace RmBackend.Controllers.Api
         [HttpGet("review")]
         public IActionResult GetReview(int reviewId)
         {
-            var review = _context.CourseReviews.FirstOrDefault(r => r.CourseReviewId == reviewId);
+            var review = _context.CourseReviews.Include(r => r.Course).Include(r => r.User).FirstOrDefault(r => r.CourseReviewId == reviewId);
             if (review == null || review.Status == PostStatus.Deleted)
             {
                 return Json("review not found");
@@ -159,17 +160,17 @@ namespace RmBackend.Controllers.Api
 
                 _context.CourseReviews.Add(review);
                 _context.SaveChanges();
+
+                return Json(review.CourseReviewId);
             }
             catch (Exception)
             {
                 // TODO: log exception
                 return Json("failed");
             }
-
-            return Json("success");
         }
 
-        [HttpPost]
+        [HttpPost("update")]
         [RequireLogin]
         public IActionResult Update(int reviewId, string title, string content)
         {
@@ -208,10 +209,10 @@ namespace RmBackend.Controllers.Api
                 return Json("failed");
             }
 
-            return Json("success");
+            return Json(reviewId);
         }
 
-        [HttpDelete]
+        [HttpDelete("delete")]
         [RequireLogin]
         public IActionResult Delete(int reviewId)
         {
