@@ -88,6 +88,26 @@ namespace RmBackend.Controllers.Api
             return Json(review);
         }
 
+        [HttpGet("course")]
+        public IActionResult GetByCourse(string param)
+        {
+            int id;
+            if (Int32.TryParse(param, out id))
+            {
+                var query = from r in _context.CourseReviews
+                    where r.CourseId == id && r.Status == PostStatus.Posted
+                    select new { r.Course, r.Title, r.CourseReviewId };
+                return Json(query.ToList());
+            }
+            else
+            {
+                var query = from r in _context.CourseReviews
+                            where r.Course.Code == param && r.Status == PostStatus.Posted
+                            select new { r.Course, r.Title, r.CourseReviewId };
+                return Json(query.ToList());
+            }
+        }
+
         private bool IsValidReview(string title, string content)
         {
             if (String.IsNullOrWhiteSpace(title) || title.Length > 20)
