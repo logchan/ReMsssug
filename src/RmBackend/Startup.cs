@@ -54,9 +54,9 @@ namespace RmBackend
             loggerFactory.AddDebug();
 
             // Framework
+            app.UseSession();
             app.UseMvc();
             app.UseStaticFiles();
-            app.UseSession();
 
             // Json Settings
             JsonConvert.DefaultSettings = () => StaticInfo.JsonSettings;

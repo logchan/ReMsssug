@@ -11,7 +11,7 @@ using RmBackend.Models;
 namespace RmBackend.Controllers.Api
 {
 #if DEBUG
-    [Route("debug")]
+    [Route("api/debug")]
     public class ApiDebugController : RmApiControllerBase
     {
         public ApiDebugController(RmContext context, IOptions<RmSettings> options) : base(context, options)
