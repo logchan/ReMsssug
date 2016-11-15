@@ -10,12 +10,7 @@ namespace RmBackend
     {
         static StaticInfo()
         {
-            JsonSettings = new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-        }
 
-        public static JsonSerializerSettings JsonSettings { get; private set; }
+        }
     }
 }
