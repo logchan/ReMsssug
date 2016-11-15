@@ -20,5 +20,11 @@ namespace RmBackend.Controllers
         {
             return View();
         }
+
+        [HttpGet("review")]
+        public IActionResult Review()
+        {
+            return View();
+        }
     }
 }

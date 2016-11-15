@@ -66,7 +66,9 @@ $('#mainform').on('submit', function (e) {
                     showMsg('Successfully ' +
                         (isUpdate ? 'updated' : 'added') +
                         '! Redirecting to viewing in one second...');
-                    // TODO: auto redirect to details page
+                    setTimeout(function() {
+                        window.location = '/cwiki/review?id=' + id;
+                    }, 1000);
                 }
             },
             statusCode: {

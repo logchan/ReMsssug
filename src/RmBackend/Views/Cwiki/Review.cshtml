@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Cwiki";
+    var id = Context.Request.Query["id"].FirstOrDefault() ?? "null";
+}
+
+<script>
+    var id = Number('@id');
+    if (isNaN(id)) {
+        window.location = '/cwiki';
+    }
+</script>
+
+<div class="row">
+    <h2><span class="course-code" id="courseCode"></span><span id="title"></span></h2>
+    <h5 style="margin-top: 0">Re:MSSSUG Cwiki <span id="info"></span></h5>
+    <hr />
+</div>
+
+<div class="row">
+    <p id="msg" class="col-md-12 alert alert-info">Loading data...</p>
+    <p id="errmsg" class="col-md-12 alert alert-danger" style="display: none;"></p>
+</div>
+
+<div class="row">
+    <div class="col-md-12" style="max-width: 900px; min-height: 200px;" id="content">
+        
+    </div>
+</div>
+
+<div class="row">
+    <hr />
+    <h4>Comment</h4>
+    <!--TODO: COMMENT AREA-->
+</div>
+
+<script src="~/js/showdown.min.js"></script>
+<script src="~/js/cwiki-review.js"></script>
