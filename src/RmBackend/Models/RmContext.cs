@@ -18,5 +18,12 @@ namespace RmBackend.Models
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseReview> CourseReviews { get; set; }
         public DbSet<User> Users { get; set; }
+
+        public int NewCommentEntryNumber()
+        {
+            var max = Comments.Max(c => c.EntryNumber);
+
+            return max + 1;
+        }
     }
 }
