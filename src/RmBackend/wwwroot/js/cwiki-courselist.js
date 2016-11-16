@@ -34,4 +34,5 @@ function loadData() {
     });
 }
 
+checkLogin();
 loadData();

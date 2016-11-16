@@ -119,7 +119,7 @@ function loadCurrentReview() {
 
                 loadDataComplete();
             } else {
-                showMsg('Failed to load current review: ' + data);
+                showMsg('Failed to load current review: ' + data, true);
             }
         }).fail(function () {
             showMsg('Failed to load current review', true);
@@ -156,4 +156,12 @@ function loadData() {
         });
 }
 
-loadData();
+loginCheckCallback.push(function () {
+    if (userInfo === 'not logged in') {
+        showMsg('Please login first.', true);
+    } else {
+        loadData();
+    }
+});
+
+checkLogin();

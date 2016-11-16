@@ -1,5 +1,8 @@
 ﻿var apiserver = window.location.origin;
 var loginserver = 'https://ihome.ust.hk/~glinaa/remsssug/login';
+var loginChecked = false;
+var userInfo = 'not logged in';
+var loginCheckCallback = [];
 
 function showMsg(msg, err) {
     var x = $(err ? '#errmsg' : '#msg');
@@ -27,4 +30,19 @@ function setSelectOption(selId, optionValue) {
             }
         }
     }
+}
+
+function checkLogin() {
+    $.get(apiserver + '/api/user/current',
+        function(data) {
+            userInfo = data;
+            loginChecked = true;
+            for (var i in loginCheckCallback) {
+                if (loginCheckCallback.hasOwnProperty(i)) {
+                    loginCheckCallback[i]();
+                }
+            }
+        }).fail(function() {
+        showMsg('Failed to check login status', true);
+    });
 }
