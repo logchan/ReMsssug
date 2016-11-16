@@ -1,4 +1,6 @@
 ﻿function setupPage(page) {
+
+    document.title = page.Title + ' ' + document.title;
     $('#pageTitle').text(page.Title);
     $('#pageSubtitle').text(page.Subtitle);
     if (page.RawContent) {
