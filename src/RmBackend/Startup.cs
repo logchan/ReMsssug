@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using RmBackend.Models;
 
 namespace RmBackend
@@ -30,7 +31,16 @@ namespace RmBackend
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc()
+                .AddJsonOptions(o =>
+                {
+                    var res = o.SerializerSettings.ContractResolver as DefaultContractResolver;
+                    if (res != null)
+                    {
+                        res.NamingStrategy = null;
+                    }
+                    o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
 
             // Add DB
             services.AddDbContext<RmContext>(options => options.UseSqlServer(Configuration["ConnectionString"]));
@@ -54,12 +64,9 @@ namespace RmBackend
             loggerFactory.AddDebug();
 
             // Framework
+            app.UseSession();
             app.UseMvc();
             app.UseStaticFiles();
-            app.UseSession();
-
-            // Json Settings
-            JsonConvert.DefaultSettings = () => StaticInfo.JsonSettings;
 
             // Migrate DB
             var optionsBuilder = new DbContextOptionsBuilder<RmContext>();

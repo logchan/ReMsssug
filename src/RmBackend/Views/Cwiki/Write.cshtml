@@ -1,0 +1,57 @@
+﻿@{
+    var reviewId = Context.Request.Query["reviewId"].FirstOrDefault();
+    var title = reviewId == null ? "Write Cwiki" : "Update Cwiki";
+    ViewBag.Title = title;
+}
+
+<script>
+    $('#pageTitle').text('@title');
+    $('#pageSubtitle').text('Re:MSSSUG Cwiki');
+
+    var isUpdate = @(reviewId != null ? "true" : "false");
+    var reviewId = '@reviewId';
+</script>
+
+<form class="form form-horizontal" id="mainform" onsubmit="return false">
+    <div class="form-group row">
+        <label for="subject" class="col-md-1 control-label">Subject</label>
+        <div class="col-md-2">
+            <select id="subject" class="form-control" onchange="subjectSelectionChanged()" disabled></select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="code" class="col-md-1 control-label">Code</label>
+        <div class="col-md-2">
+            <select name="courseId" id="code" class="form-control" disabled></select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="title" class="col-md-1 control-label">Title</label>
+        <div class="col-md-6">
+            <input name="title" id="title" type="text" class="form-control" disabled />
+        </div>
+    </div>
+    <div class="form-group row" id="contentGroup">
+        <label for="content" class="col-md-1 control-label">Content</label>
+        <div class="col-md-6">
+            <textarea name="content" id="content" rows="20" class="form-control" style="resize: none" disabled></textarea>
+        </div>
+    </div>
+    <div class="form-group row" id="previewGroup" style="display: none;">
+        <label class="col-md-1 control-label">Preview</label>
+        <div class="col-md-8 md-preview" id="previewBox">
+            
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-1 control-label">&nbsp;</label>
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary col-md-2" style="margin-right: 4px;" disabled>Submit</button>
+            <button type="button" id="previewToggle" class="btn btn-default col-md-2" disabled onclick="preview()">Preview</button>
+        </div>
+    </div>
+    <input type="hidden" name="reviewId" value="@reviewId" />
+</form>
+
+<script src="~/js/showdown.min.js"></script>
+<script src="~/js/cwiki-write.js"></script>

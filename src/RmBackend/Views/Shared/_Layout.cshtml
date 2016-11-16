@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/rmweb.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/rmweb.css">
     <title>@ViewBag.Title - Re:MSSSUG Home</title>
 </head>
 <body>
-
+<script src="~/js/global.js"></script>
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -26,10 +26,29 @@
             </div>
         </div>
     </nav>
+    
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
 
-    <div class="container">
-        @RenderBody()
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 id="pageTitle"></h2>
+            <h5 id="pageSubtitle"></h5>
+            <hr />
+        </div>
+        
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p id="msg" class="alert alert-info">Loading data...</p>
+            <p id="errmsg" class="alert alert-danger" style="display: none;"></p>
+        </div>
+    </div>
+
+    @RenderBody()
+</div>
 
     <footer class="footer">
         <div class="container">
@@ -39,7 +58,5 @@
         </div>
     </footer>
 
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

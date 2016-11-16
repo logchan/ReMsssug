@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Cwiki Course";
+    var code = Context.Request.Query["code"].FirstOrDefault() ?? "";
+}
+
+<script>
+    $('#pageTitle').text('Cwiki Search');
+    $('#pageSubtitle').text('Re:MSSSUG Cwiki');
+
+    var code = '@code';
+    if (code.length === 0) {
+        window.location = '/cwiki';
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Reviews of @code</h3>
+        <ul id="reviews" class="review-list"></ul>
+    </div>
+</div>
+
+<script src="~/js/cwiki-lists.js"></script>
+<script src="~/js/cwiki-course.js"></script>
