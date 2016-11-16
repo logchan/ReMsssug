@@ -52,6 +52,13 @@ namespace RmBackend.Controllers.Api
             return Json(query.ToList());
         }
 
+        [HttpGet("page")]
+        public IActionResult Page(int id)
+        {
+            var page = _context.Pages.FirstOrDefault(p => p.PageId == id);
+            return page == null ? Json("page not found") : Json(page);
+        }
+
         [HttpPost("newpage")]
         public IActionResult NewPage()
         {
