@@ -85,7 +85,7 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpPost("updatepage")]
-        public IActionResult UpdatePage([FromForm] Page np)
+        public IActionResult UpdatePage(Page np)
         {
             var page = _context.Pages.FirstOrDefault(p => p.PageId == np.PageId);
             if (page == null)

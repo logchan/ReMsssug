@@ -1,3 +1,125 @@
 ﻿@{
     ViewBag.Title = "Update Page";
+    var id = Context.Request.Query["id"].FirstOrDefault() ?? "";
 }
+
+<script>
+    $('#pageTitle').text('Update Page');
+    $('#pageSubtitle').text('Re:MSSSUG Admin');
+
+    var id = '@id';
+    if (id === '') {
+        window.location = '/admin/pages';
+    }
+</script>
+
+<form class="form form-horizontal" id="mainform" onsubmit="return false">
+    <div class="form-group row">
+        <label for="enabled" class="col-md-2 control-label">Enabled</label>
+        <div class="checkbox col-md-6">
+            <label for="enabled"><input type="checkbox" name="Enabled" id="enabled" class="checkbox" value="true" checked disabled/>The page is visible to clients</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="path" class="col-md-2 control-label">Path</label>
+        <div class="col-md-6">
+            <input name="Path" id="path" type="text" class="form-control" disabled/>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="title" class="col-md-2 control-label">Title</label>
+        <div class="col-md-6">
+            <input name="Title" id="title" type="text" class="form-control" disabled/>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="subtitle" class="col-md-2 control-label">Subtitle</label>
+        <div class="col-md-6">
+            <input name="Subtitle" id="subtitle" type="text" class="form-control" disabled/>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="content" class="col-md-2 control-label">Content</label>
+        <div class="col-md-6">
+            <textarea name="Content" id="content" rows="20" class="form-control" style="resize: none" disabled></textarea>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="rawContent" class="col-md-2 control-label">Raw Content</label>
+        <div class="checkbox col-md-6">
+            <label for="rawContent"><input type="checkbox" name="RawContent" id="rawContent" class="checkbox" value="true" checked disabled/>The content should be treated as raw HTML rather than Markdown</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="javaScriptFiles" class="col-md-2 control-label">JavaScript files</label>
+        <div class="col-md-6">
+            <textarea name="JavaScriptFiles" id="javaScriptFiles" rows="5" class="form-control" style="resize: none" disabled></textarea>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="cssFiles" class="col-md-2 control-label">CSS files</label>
+        <div class="col-md-6">
+            <textarea name="CssFiles" id="cssFiles" rows="5" class="form-control" style="resize: none" disabled></textarea>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="requireLogin" class="col-md-2 control-label">Require Login</label>
+        <div class="checkbox col-md-6">
+            <label for="requireLogin"><input type="checkbox" name="RequireLogin" id="requireLogin" class="checkbox" value="true" checked disabled/>Clients need to login to view this page</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="requireFullMember" class="col-md-2 control-label">Require FullMember</label>
+        <div class="checkbox col-md-6">
+            <label for="requireFullMember"><input type="checkbox" name="RequireFullMember" id="requireFullMember" class="checkbox" value="true" checked disabled/>Clients need to be full members to view this page</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="requireAdmin" class="col-md-2 control-label">Require Admin</label>
+        <div class="checkbox col-md-6">
+            <label for="requireAdmin"><input type="checkbox" name="RequireAdmin" id="requireAdmin" class="checkbox" value="true" checked disabled/>Only admins can view the page</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="homeOrder" class="col-md-2 control-label">Home Order</label>
+        <div class="col-md-2">
+            <input name="HomeOrder" id="homeOrder" type="text" class="form-control" disabled />
+        </div>
+        <div class="col-md-4 checkbox">
+            <label>Ordered ASC, 0 for not show</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="splashOrder" class="col-md-2 control-label">Splash Order</label>
+        <div class="col-md-2">
+            <input name="SplashOrder" id="splashOrder" type="text" class="form-control" disabled />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="navbarOrder" class="col-md-2 control-label">Navbar Order</label>
+        <div class="col-md-2">
+            <input name="NavbarOrder" id="navbarOrder" type="text" class="form-control" disabled />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="thumbnailImage" class="col-md-2 control-label">Thumbnail Image</label>
+        <div class="col-md-6">
+            <input name="ThumbnailImage" id="thumbnailImage" type="text" class="form-control" disabled />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="splashImage" class="col-md-2 control-label">Splash Image</label>
+        <div class="col-md-6">
+            <input name="SplashImage" id="splashImage" type="text" class="form-control" disabled />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-2 control-label">&nbsp;</label>
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary col-md-2" style="margin-right: 4px;" disabled>Save</button>
+        </div>
+    </div>
+    <input type="hidden" name="PageId" value="@id"/>
+</form>
+
+<script src="~/js/admin-updatepage.js"></script>
