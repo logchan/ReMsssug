@@ -78,9 +78,9 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpGet("page")]
-        public IActionResult GetPage(int id)
+        public IActionResult GetPage(string path)
         {
-            var page = _context.Pages.FirstOrDefault(p => p.PageId == id);
+            var page = _context.Pages.FirstOrDefault(p => p.Path == path);
             if (page == null || !page.Enabled)
             {
                 return Json("page not found");
