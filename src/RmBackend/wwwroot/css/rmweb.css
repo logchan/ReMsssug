@@ -62,6 +62,10 @@ a:hover {
     margin-right: 10px;
 }
 
+a.btn {
+    margin-right: 4px;
+}
+
 .btnlist a.btn {
     margin-bottom: 4px;
 }

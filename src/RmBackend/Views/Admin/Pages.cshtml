@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Manage Pages";
+}
+
+<script>
+    $('#pageTitle').text('Manage Pages');
+    $('#pageSubtitle').text('Re:MSSSUG Admin');
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <button id="createPageBtn" class="btn btn-success" onclick="createPage()">Create page</button>
+        <hr/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered table-striped" id="dataTable">
+            <tr>
+                <th>Path</th>
+                <th>Title</th>
+                <th>Enabled</th>
+                <th>Action</th>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script src="~/js/admin-pages.js"></script>

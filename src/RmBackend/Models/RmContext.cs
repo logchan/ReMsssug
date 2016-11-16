@@ -18,6 +18,7 @@ namespace RmBackend.Models
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseReview> CourseReviews { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Page> Pages { get; set; }
 
         public int NewCommentEntryNumber()
         {

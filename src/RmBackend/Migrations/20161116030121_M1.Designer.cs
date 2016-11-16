@@ -8,9 +8,10 @@ using RmBackend.Models;
 namespace RmBackend.Migrations
 {
     [DbContext(typeof(RmContext))]
-    partial class RmContextModelSnapshot : ModelSnapshot
+    [Migration("20161116030121_M1")]
+    partial class M1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
