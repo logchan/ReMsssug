@@ -9,7 +9,7 @@ using RmBackend.Models;
 
 namespace RmBackend.Controllers.Api
 {
-    [Route("api/pages")]
+    [Route("api/page")]
     public class ApiPageController : RmApiControllerBase
     {
         private class PageBrief
