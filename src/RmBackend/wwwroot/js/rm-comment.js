@@ -1,4 +1,26 @@
 ﻿
+function replyComment(id) {
+    
+}
+
+function insertCommentInput(area) {
+    var form = '<form class="form form-horizontal" id="commentForm" onsubmit="return false">';
+    form += '<div class="row"><div class="col-md-6"><h4>Your comment:</h4></div></div>';
+    form += '<div class="row"><div class="col-md-6"><p id="commentIndicator"></p></div></div>';
+    form += '<div class="form-group row"><div class="col-md-6">';
+    form += '<input name="Title" id="commentTitle" type="text" class="form-control" placeholder="Title" />';
+    form += '</div></div>';
+    form += '<div class="form-group row"><div class="col-md-6">';
+    form += '<textarea name="Content" id="commentContent" rows="8" class="form-control" style="resize: none"></textarea>';
+    form += '</div></div>';
+    form += '<div class="form-group row"><div class="col-md-6">';
+    form += '<button type="submit" class="btn btn-primary col-md-2">Post</button>';
+    form += '</div></div>';
+    form += '</form>';
+
+    area.append(form);
+}
+
 function displayComment(container, comment) {
     var id = comment.CommentId;
     var li = '<li class="comment-li" id="comment-' + id + '"></li>';
@@ -8,12 +30,12 @@ function displayComment(container, comment) {
     var content = '<h4 id="comment-title-' + id + '"></h4>';
     var createTime = timestr(comment.CreateTime);
     var modifyTime = timestr(comment.ModifyTime);
-    content += '<p class="comment-info">By ' + (comment.User == null ? 'anonymous' : comment.User.Itsc) + ' @ ' + createTime + '</p>';
+    content += '<p class="comment-info">By <span id="comment-itsc-' + id + '">' + (comment.User == null ? 'anonymous' : comment.User.Itsc) + '</span> @ ' + createTime + '</p>';
     content += '<div>' + showdownConverter.makeHtml(comment.Content) + '</div>';
     if (createTime !== modifyTime) {
         content += '<p class="comment-modified">Modified at ' + modifyTime + '</p>';
     }
-    content += '<a href="javascript:void(0) onclick="replyComment(' + id + ')>Reply</a>';
+    content += '<a href="javascript:void(0) onclick="replyComment(' + id + ')">Reply</a>';
 
     li.html(content);
     $('#comment-title-' + id).text(comment.Title);
@@ -67,6 +89,7 @@ function initComments(areaId, entryId) {
                 area.append('<p>' + data + '</p>');
             } else {
                 displayComments(area, data);
+                insertCommentInput(area);
             }
         });
 }
