@@ -1,6 +1,5 @@
 ﻿var subjects = [];
 var courses = [];
-var converter = new showdown.Converter();
 
 function disableForm() {
     $('#mainform :input').prop('disabled', true);
@@ -17,7 +16,7 @@ function preview() {
     var btn = $('#previewToggle');
     if (btn.text() === 'Preview') {
         $('#contentGroup').hide();
-        $('#previewBox').html(converter.makeHtml($('#content').get(0).value));
+        $('#previewBox').html(showdownConverter.makeHtml($('#content').get(0).value));
         $('#previewGroup').show();
         btn.text('Write');
     } else {

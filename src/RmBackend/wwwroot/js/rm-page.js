@@ -6,7 +6,7 @@
     if (page.RawContent) {
         $('#pageArea').html(page.Content);
     } else {
-        var converter = new showdown.Converter();
+        var converter = new showdown.Converter(); // no XSS filter since page is from admin and may contain necessary scripts
         $('#pageArea').html(converter.makeHtml(page.Content));
     }
 

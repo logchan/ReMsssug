@@ -78,6 +78,7 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpGet("review")]
+        [RemoveFields("VersionLog", AdminBypass = false)]
         public IActionResult GetReview(int reviewId)
         {
             var review = _context.CourseReviews.Include(r => r.Course).Include(r => r.User).FirstOrDefault(r => r.CourseReviewId == reviewId);
@@ -130,7 +131,7 @@ namespace RmBackend.Controllers.Api
                 return Json("[]");
 
             int id;
-            User user = Int32.TryParse(param, out id) ? 
+            var user = Int32.TryParse(param, out id) ? 
                 _context.Users.FirstOrDefault(u => u.UserId == id) : 
                 _context.Users.FirstOrDefault(u => u.Itsc == param);
 
