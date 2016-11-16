@@ -14,11 +14,9 @@ function loadData() {
             $('#courseCode').text(data.Course.Code);
             $('#content').html(showdownConverter.makeHtml(data.Content));
 
-            var time = data.ModifyTime;
-            time = time.substr(0, time.indexOf('.'));
-            time = time.replace('T', ' ');
-            var info = 'by <strong>' + data.User.Itsc + '</strong>, last updated at <strong>' + time + '</strong>';
+            var info = 'by <strong>' + data.User.Itsc + '</strong>, last updated at <strong>' + timestr(data.ModifyTime) + '</strong>';
             $('#info').html(info);
+            initComments('commentArea', data.CommentEntryNumber);
         } else {
             showMsg('Failed to load review: ' + data);
             redirectToCwiki();

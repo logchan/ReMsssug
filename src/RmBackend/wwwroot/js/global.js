@@ -47,3 +47,10 @@ function checkLogin() {
         showMsg('Failed to check login status', true);
     });
 }
+
+function timestr(time) {
+    if (time.indexOf('.') > 0)
+        time = time.substr(0, time.indexOf('.'));
+    time = time.replace('T', ' ');
+    return time;
+}

@@ -11,7 +11,7 @@ using RmBackend.Framework;
 
 namespace RmBackend.Controllers.Api
 {
-    [Route("comment")]
+    [Route("api/comment")]
     public class ApiCommentController : RmApiControllerBase
     {
         public ApiCommentController(RmContext context, IOptions<RmSettings> options) : base(context, options)
