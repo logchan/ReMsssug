@@ -26,6 +26,32 @@ namespace RmBackend.Controllers.Api
             return Json("success");
         }
 
+        #region Pages
+
+        private class AdminPageBrief
+        {
+            public int PageId { get; set; }
+            public string Path { get; set; }
+            public string Title { get; set; }
+            public bool Enabled { get; set; }
+        }
+
+        [HttpGet("pages")]
+        public IActionResult Pages()
+        {
+            var query = from p in _context.Pages
+                orderby p.PageId descending
+                select new AdminPageBrief
+                {
+                    PageId = p.PageId,
+                    Path = p.Path,
+                    Title = p.Title,
+                    Enabled = p.Enabled
+                };
+
+            return Json(query.ToList());
+        }
+
         [HttpPost("newpage")]
         public IActionResult NewPage()
         {
@@ -109,5 +135,7 @@ namespace RmBackend.Controllers.Api
                 return Json("failed");
             }
         }
+
+        #endregion
     }
 }
