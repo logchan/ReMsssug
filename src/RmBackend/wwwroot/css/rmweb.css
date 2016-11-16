@@ -65,3 +65,9 @@ a:hover {
 .btnlist a.btn {
     margin-bottom: 4px;
 }
+
+tr.review-deleted td {
+    color: gray;
+    text-decoration: line-through;
+    height: 51px;
+}

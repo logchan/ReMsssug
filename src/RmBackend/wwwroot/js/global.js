@@ -3,6 +3,7 @@ var loginserver = 'https://ihome.ust.hk/~glinaa/remsssug/login';
 var loginChecked = false;
 var userInfo = 'not logged in';
 var loginCheckCallback = [];
+var postStatus = ['Draft', 'Posted', 'Deleted', 'Need Modification', 'Need Approval'];
 
 function showMsg(msg, err) {
     var x = $(err ? '#errmsg' : '#msg');
