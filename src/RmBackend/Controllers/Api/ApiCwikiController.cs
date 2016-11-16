@@ -19,6 +19,22 @@ namespace RmBackend.Controllers.Api
         {
         }
 
+        private class ReviewBrief
+        {
+            public int CourseReviewId { get; set; }
+            public Course Course { get; set; }
+            public string Title { get; set; }
+            public PostStatus Status { get; set; }
+
+            public ReviewBrief(CourseReview review)
+            {
+                CourseReviewId = review.CourseReviewId;
+                Course = review.Course;
+                Title = review.Title;
+                Status = review.Status;
+            }
+        }
+
         [HttpGet("courses")]
         public IActionResult GetCoursesWithReviews()
         {
@@ -45,7 +61,7 @@ namespace RmBackend.Controllers.Api
             var query = from r in _context.CourseReviews
                 where r.Status == PostStatus.Posted
                 orderby r.ModifyTime descending
-                select new {r.Course, r.Title, r.CourseReviewId};
+                select new ReviewBrief(r);
 
             return Json(query.Take(10).ToList());
         }
@@ -62,7 +78,7 @@ namespace RmBackend.Controllers.Api
             var rquery = from r in _context.CourseReviews
                          where entries.Contains(r.CommentEntryNumber)
                          orderby entries.IndexOf(r.CommentEntryNumber)
-                         select new {r.Course, r.Title, r.CourseReviewId};
+                         select new ReviewBrief(r);
 
             return Json(rquery.ToList());
         }
@@ -91,19 +107,52 @@ namespace RmBackend.Controllers.Api
         [HttpGet("course")]
         public IActionResult GetByCourse(string param)
         {
+            param = param?.Trim();
+            if (String.IsNullOrEmpty(param))
+                return Json("[]");
+
             int id;
             if (Int32.TryParse(param, out id))
             {
                 var query = from r in _context.CourseReviews
                     where r.CourseId == id && r.Status == PostStatus.Posted
-                    select new { r.Course, r.Title, r.CourseReviewId };
+                    select new ReviewBrief(r);
                 return Json(query.ToList());
             }
             else
             {
                 var query = from r in _context.CourseReviews
-                            where r.Course.Code == param && r.Status == PostStatus.Posted
-                            select new { r.Course, r.Title, r.CourseReviewId };
+                    where r.Course.Code == param && r.Status == PostStatus.Posted
+                    select new ReviewBrief(r);
+                return Json(query.ToList());
+            }
+        }
+
+        [HttpGet("user")]
+        public IActionResult GetByUser(string param)
+        {
+            param = param?.Trim();
+            if (String.IsNullOrEmpty(param))
+                return Json("[]");
+
+            int id;
+            User user = Int32.TryParse(param, out id) ? 
+                _context.Users.FirstOrDefault(u => u.UserId == id) : 
+                _context.Users.FirstOrDefault(u => u.Itsc == param);
+
+            var currentUser = UserManager.GetUser(HttpContext.Session);
+            if (currentUser != null && currentUser.UserId == user.UserId)
+            {
+                var query = from r in _context.CourseReviews
+                    where r.UserId == user.UserId
+                    select new ReviewBrief(r);
+                return Json(query.ToList());
+            }
+            else
+            {
+                var query = from r in _context.CourseReviews
+                    where r.UserId == user.UserId && r.Status == PostStatus.Posted
+                    select new ReviewBrief(r);
                 return Json(query.ToList());
             }
         }
