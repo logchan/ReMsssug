@@ -10,10 +10,9 @@ function loadData() {
         if (data.CourseReviewId != undefined) {
             hideMsg();
 
-            var converter = new showdown.Converter();
             $('#title').text(data.Title);
             $('#courseCode').text(data.Course.Code);
-            $('#content').html(converter.makeHtml(data.Content));
+            $('#content').html(showdownConverter.makeHtml(data.Content));
 
             var time = data.ModifyTime;
             time = time.substr(0, time.indexOf('.'));
