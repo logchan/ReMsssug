@@ -5,20 +5,12 @@
 }
 
 <script>
+    $('#pageTitle').text('@title');
+    $('#pageSubtitle').text('Re:MSSSUG Cwiki');
+
     var isUpdate = @(reviewId != null ? "true" : "false");
     var reviewId = '@reviewId';
 </script>
-
-<div class="row">
-    <h2>@title</h2>
-    <h5>Re:MSSSUG Cwiki</h5>
-    <hr />
-</div>
-
-<div class="row">
-    <p class="col-md-12 alert alert-info" id="msg">Loading, please wait...</p>
-    <p id="errmsg" class="col-md-12 alert alert-danger" style="display:none;"></p>
-</div>
 
 <form class="form form-horizontal" id="mainform" onsubmit="return false">
     <div class="form-group row">

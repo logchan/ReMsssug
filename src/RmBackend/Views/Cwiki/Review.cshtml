@@ -4,22 +4,15 @@
 }
 
 <script>
+    $('#pageTitle').html('<span class="course-code" id="courseCode"></span><span id="title"></span>');
+    $('#pageSubtitle').html('Re:MSSSUG Cwiki <span id="info"></span>');
+    $('#pageSubtitle').get(0).style.paddingRight = '0px';
+
     var id = Number('@id');
     if (isNaN(id)) {
         window.location = '/cwiki';
     }
 </script>
-
-<div class="row">
-    <h2><span class="course-code" id="courseCode"></span><span id="title"></span></h2>
-    <h5 style="margin-top: 0">Re:MSSSUG Cwiki <span id="info"></span></h5>
-    <hr />
-</div>
-
-<div class="row">
-    <p id="msg" class="col-md-12 alert alert-info">Loading data...</p>
-    <p id="errmsg" class="col-md-12 alert alert-danger" style="display: none;"></p>
-</div>
 
 <div class="row">
     <div class="col-md-12" style="max-width: 900px; min-height: 200px;" id="content">
@@ -28,9 +21,11 @@
 </div>
 
 <div class="row">
-    <hr />
-    <h4>Comment</h4>
-    <!--TODO: COMMENT AREA-->
+    <div class="col-md-12">
+        <hr />
+        <h4>Comment</h4>
+        <!--TODO: COMMENT AREA-->
+    </div>
 </div>
 
 <script src="~/js/showdown.min.js"></script>
