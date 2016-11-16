@@ -25,14 +25,6 @@ namespace RmBackend.Controllers.Api
             public Course Course { get; set; }
             public string Title { get; set; }
             public PostStatus Status { get; set; }
-
-            public ReviewBrief(CourseReview review)
-            {
-                CourseReviewId = review.CourseReviewId;
-                Course = review.Course;
-                Title = review.Title;
-                Status = review.Status;
-            }
         }
 
         [HttpGet("courses")]
@@ -61,7 +53,7 @@ namespace RmBackend.Controllers.Api
             var query = from r in _context.CourseReviews
                 where r.Status == PostStatus.Posted
                 orderby r.ModifyTime descending
-                select new ReviewBrief(r);
+                select new ReviewBrief { Course = r.Course, CourseReviewId = r.CourseReviewId, Status = r.Status, Title = r.Title};
 
             return Json(query.Take(10).ToList());
         }
@@ -78,7 +70,7 @@ namespace RmBackend.Controllers.Api
             var rquery = from r in _context.CourseReviews
                          where entries.Contains(r.CommentEntryNumber)
                          orderby entries.IndexOf(r.CommentEntryNumber)
-                         select new ReviewBrief(r);
+                         select new ReviewBrief { Course = r.Course, CourseReviewId = r.CourseReviewId, Status = r.Status, Title = r.Title };
 
             return Json(rquery.ToList());
         }
@@ -116,14 +108,14 @@ namespace RmBackend.Controllers.Api
             {
                 var query = from r in _context.CourseReviews
                     where r.CourseId == id && r.Status == PostStatus.Posted
-                    select new ReviewBrief(r);
+                    select new ReviewBrief { Course = r.Course, CourseReviewId = r.CourseReviewId, Status = r.Status, Title = r.Title };
                 return Json(query.ToList());
             }
             else
             {
                 var query = from r in _context.CourseReviews
                     where r.Course.Code == param && r.Status == PostStatus.Posted
-                    select new ReviewBrief(r);
+                    select new ReviewBrief { Course = r.Course, CourseReviewId = r.CourseReviewId, Status = r.Status, Title = r.Title };
                 return Json(query.ToList());
             }
         }
@@ -145,14 +137,14 @@ namespace RmBackend.Controllers.Api
             {
                 var query = from r in _context.CourseReviews
                     where r.UserId == user.UserId
-                    select new ReviewBrief(r);
+                    select new ReviewBrief { Course = r.Course, CourseReviewId = r.CourseReviewId, Status = r.Status, Title = r.Title };
                 return Json(query.ToList());
             }
             else
             {
                 var query = from r in _context.CourseReviews
                     where r.UserId == user.UserId && r.Status == PostStatus.Posted
-                    select new ReviewBrief(r);
+                    select new ReviewBrief { Course = r.Course, CourseReviewId = r.CourseReviewId, Status = r.Status, Title = r.Title };
                 return Json(query.ToList());
             }
         }
