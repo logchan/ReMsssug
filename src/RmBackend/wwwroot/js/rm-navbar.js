@@ -7,7 +7,7 @@
             for (var i in data) {
                 if (data.hasOwnProperty(i)) {
                     var page = data[i];
-                    var li = '<li><a href="/page/' + page.Path + '">' + page.Title + '</a></li>';
+                    var li = String.format('<li><a href="/page/{0}">{1}</a></li>', page.Path, page.Title);
                     ul.append(li);
                 }
             }

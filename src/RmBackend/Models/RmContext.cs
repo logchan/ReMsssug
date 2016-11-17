@@ -19,12 +19,29 @@ namespace RmBackend.Models
         public DbSet<CourseReview> CourseReviews { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Page> Pages { get; set; }
+        public DbSet<CommentEntry> CommentEntries { get; set; }
 
         public int NewCommentEntryNumber()
         {
-            var max = Comments.Max(c => c.EntryNumber);
+            var entry = new CommentEntry
+            {
+                AllowPost = true,
+                Disabled = false
+            };
+            CommentEntries.Add(entry);
+            SaveChanges();
 
-            return max + 1;
+            return entry.CommentEntryId;
+        }
+
+        public void DisableCommentEntry(int id)
+        {
+            var entry = CommentEntries.FirstOrDefault(e => e.CommentEntryId == id);
+            if (entry != null)
+            {
+                entry.Disabled = true;
+                SaveChanges();
+            }
         }
     }
 }

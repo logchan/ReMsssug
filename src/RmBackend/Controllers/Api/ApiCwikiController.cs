@@ -297,6 +297,7 @@ namespace RmBackend.Controllers.Api
             {
                 review.Status = PostStatus.Deleted;
                 _context.SaveChanges();
+                _context.DisableCommentEntry(review.CommentEntryNumber);
             }
             catch (Exception)
             {

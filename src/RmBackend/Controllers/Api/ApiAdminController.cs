@@ -133,6 +133,7 @@ namespace RmBackend.Controllers.Api
             {
                 _context.Pages.Remove(page);
                 _context.SaveChanges();
+                _context.DisableCommentEntry(page.CommentEntryNumber);
 
                 return Json("success");
             }

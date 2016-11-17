@@ -47,3 +47,23 @@ function checkLogin() {
         showMsg('Failed to check login status', true);
     });
 }
+
+function timestr(time) {
+    if (time.indexOf('.') > 0)
+        time = time.substr(0, time.indexOf('.'));
+    time = time.replace('T', ' ');
+    return time;
+}
+
+// http://stackoverflow.com/questions/610406/javascript-printf-string-format/4673436#4673436
+if (!String.format) {
+    String.format = function (format) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        return format.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+              ? args[number]
+              : match
+            ;
+        });
+    };
+}

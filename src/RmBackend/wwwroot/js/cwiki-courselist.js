@@ -10,12 +10,16 @@ function displayCourses() {
             var course = courses[i];
             var subject = course.Code.substr(0, 4);
             if (subject !== currSubject) {
-                area.append('<div class="row"><div class="col-md-12" id="row-' + subject + '"><h3>' + subject + '</h3></div></div>');
+                area.append(
+                    String.format('<div class="row"><div class="col-md-12" id="row-{0}"><h3>{0}</h3></div></div>', subject)
+                    );
                 currSubject = subject;
             }
 
             var div = $('#row-' + subject);
-            div.append('<a href="/cwiki/course?code=' + course.Code + '" class="btn btn-default course-code-btn">' + course.Code + '</a>');
+            div.append(
+                String.format('<a href="/cwiki/course?code={0}" class="btn btn-default course-code-btn">{0}</a>', course.Code)
+                );
         }
     }
 }

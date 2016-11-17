@@ -94,7 +94,9 @@ function subjectSelectionChanged() {
         if (courses.hasOwnProperty(i)) {
             var course = courses[i];
             if (course.Code.indexOf(subject) === 0) {
-                codes.append('<option value="' + course.CourseId + '">' + course.Code.substr(4) + '</option>');
+                codes.append(
+                    String.format('<option value="{0}">{1}</option>', course.CourseId, course.Code.substr(4))
+                    );
             }
         }
     }
@@ -137,7 +139,9 @@ function loadData() {
                     var subject = course.Code.substr(0, 4);
                     if (subjects.indexOf(subject) < 0) {
                         subjects.push(subject);
-                        $('#subject').append('<option value="' + subject + '">' + subject + '</option>');
+                        $('#subject').append(
+                            String.format('<option value="{0}">{0}</option>', subject)
+                            );
                     }
                 }
             }
