@@ -11,6 +11,7 @@
 *.userprefs
 
 # Build results
+src/RmBackend/Properties/PublishProfiles/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
