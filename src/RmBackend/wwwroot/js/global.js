@@ -1,5 +1,5 @@
 ﻿var apiserver = window.location.origin;
-var loginserver = 'https://ihome.ust.hk/~glinaa/remsssug/login';
+var loginserver = 'https://ihome.ust.hk/~glinaa/cgi-bin/remsssug/login.php';
 var loginChecked = false;
 var userInfo = 'not logged in';
 var loginCheckCallback = [];

@@ -102,11 +102,12 @@ function insertCommentInput(area, entryId) {
     form += '<input name="Title" id="commentTitle" type="text" class="form-control" placeholder="Title" />';
     form += '</div></div>';
     form += '<div class="form-group row"><div class="col-md-6">';
-    form += '<textarea name="Content" id="commentContent" rows="8" class="form-control" style="resize: none"></textarea>';
+    form += '<textarea name="Content" id="commentContent" rows="8" class="form-control" style="resize: none" placeholder="Use Markdown syntax"></textarea>';
     form += '</div></div>';
     form += '<div class="form-group row"><div class="checkbox col-md-6">';
     form += '<label for="commentAnonymous"><input type="checkbox" name="IsAnonymous" id="commentAnonymous" class="checkbox" value="true"/>Post as anonymous</label>';
     form += '</div></div>';
+	form += commentColMd6('<p>If you don\'t know Markdown, check <a href="/page/guide" target="_blank">Guide (new window)</a> before you post.</p>');
     form += '<div class="form-group row"><div class="col-md-6">';
     form += '<button type="submit" class="btn btn-primary col-md-2">Post</button>';
     form += '</div></div>';

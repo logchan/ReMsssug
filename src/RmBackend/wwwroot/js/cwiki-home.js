@@ -1,6 +1,6 @@
 ﻿function loadLatestComment() {
     $.get(apiserver + '/api/cwiki/latestcomment', function (data) {
-        var ul = $('#latestcomment');
+        var ul = $('#latestComment');
         putReviewListData(ul, data);
         hideMsg();
     }).fail(function () {
