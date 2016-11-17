@@ -1,0 +1,5 @@
+SSLRequireSSL
+AuthType Basic
+AuthName ByWebLDAP
+AuthLDAP On
+require valid-user
