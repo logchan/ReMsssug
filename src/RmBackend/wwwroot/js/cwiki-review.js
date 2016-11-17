@@ -14,7 +14,7 @@ function loadData() {
             $('#courseCode').text(data.Course.Code);
             $('#content').html(showdownConverter.makeHtml(data.Content));
 
-            var info = 'by <strong>' + data.User.Itsc + '</strong>, last updated at <strong>' + timestr(data.ModifyTime) + '</strong>';
+            var info = String.format('by <strong>{0}</strong>, last updated at <strong>{1}</strong>', data.User.Itsc, timestr(data.ModifyTime));
             $('#info').html(info);
             initComments('commentArea', data.CommentEntryNumber);
         } else {

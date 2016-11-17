@@ -18,7 +18,9 @@
         for (i in jsfiles) {
             if (jsfiles.hasOwnProperty(i)) {
                 file = jsfiles[i];
-                $('#pageArea').append('<script src="' + file + '"></script>');
+                $('#pageArea').append(
+                    String.format('<script src="{0}"></script>', file)
+                    );
             }
         }
     }
@@ -28,7 +30,9 @@
         for (i in cssfiles) {
             if (cssfiles.hasOwnProperty(i)) {
                 file = cssfiles[i];
-                $('head').append('<link rel="stylesheet" href="' + file + '"></link>');
+                $('head').append(
+                    String.format('<link rel="stylesheet" href="{0}"></link>', file)
+                    );
             }
         }
     }

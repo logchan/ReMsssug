@@ -11,9 +11,9 @@
                             continue;
 
                         var thumbnail = '<div class="col-md-4"><div class="thumbnail">';
-                        thumbnail += '<img src="' + page.ThumbnailImage + '" alt="' + page.Title + '" />';
+                        thumbnail += String.format('<img src="{0}" alt="{1}" />', page.ThumbnailImage, page.Title);
                         thumbnail += '<div class="caption">';
-                        thumbnail += '<h3><a href="/page/' + page.Path + '">' + page.Title + '</a></h3>';
+                        thumbnail += String.format('<h3><a href="/page/{0}">{1}</a></h3>', page.Path, page.Title);
                         thumbnail += '</div></div></div>';
                         div.append(thumbnail);
                     }

@@ -60,10 +60,10 @@ function loadData() {
                 if (data.hasOwnProperty(i)) {
                     var page = data[i];
                     var tr = '<tr>';
-                    tr += '<td id="pagePath-' + page.PageId + '">' + page.Path + '</td>';
-                    tr += '<td>' + page.Title + '</td>';
-                    tr += '<td>' + page.Enabled + '</td>';
-                    tr += '<td>' + '<a href="/admin/updatepage?id=' + page.PageId + '" class="btn btn-default">Edit</a><a href="javascript:void(0)" onclick="deletePage(' + page.PageId + ')" class="btn btn-danger">Delete</a>' + '</td>';
+                    tr += String.format('<td id="pagePath-{0}">{1}</td>', page.PageId, page.Path);
+                    tr += String.format('<td>{0}</td>', page.Title);
+                    tr += String.format('<td>{0}</td>', page.Enabled);
+                    tr += String.format('<td><a href="/admin/updatepage?id={0}" class="btn btn-default">Edit</a><a href="javascript:void(0)" onclick="deletePage({0})" class="btn btn-danger">Delete</a></td>', page.PageId);
                     tr += '</tr>';
                     table.append(tr);
                 }

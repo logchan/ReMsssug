@@ -23,28 +23,33 @@ function insertCommentInput(area) {
 
 function displayComment(container, comment) {
     var id = comment.CommentId;
-    var li = '<li class="comment-li" id="comment-' + id + '"></li>';
+    var li = String.format('<li class="comment-li" id="comment-{0}"></li>', id);
     container.append(li);
     li = $('#comment-' + id);
 
-    var content = '<h4 id="comment-title-' + id + '"></h4>';
+    
     var createTime = timestr(comment.CreateTime);
     var modifyTime = timestr(comment.ModifyTime);
-    content += '<p class="comment-info">By <span id="comment-itsc-' + id + '">' + (comment.User == null ? 'anonymous' : comment.User.Itsc) + '</span> @ ' + createTime + '</p>';
-    content += '<div>' + showdownConverter.makeHtml(comment.Content) + '</div>';
+    var user = (comment.User == null ? 'anonymous' : comment.User.Itsc);
+
+    var content = String.format('<h4 id="comment-title-{0}"></h4>', id);
+    content += String.format('<p class="comment-info">By <span id="comment-itsc-{0}">{1}</span> @ {2}</p>', id, user, createTime);
+    content += String.format('<div>{0}</div>', showdownConverter.makeHtml(comment.Content));
+
     if (createTime !== modifyTime) {
-        content += '<p class="comment-modified">Modified at ' + modifyTime + '</p>';
+        content += String.format('<p class="comment-modified">Modified at {0}</p>', modifyTime);
     }
-    content += '<a href="javascript:void(0) onclick="replyComment(' + id + ')">Reply</a>';
+    content += String.format('<a href="javascript:void(0) onclick="replyComment({0})">Reply</a>', id);
 
     li.html(content);
     $('#comment-title-' + id).text(comment.Title);
 
+    var ulid = 'ul-comment-' + id;
     if (comment.children != undefined) {
-        li.append('<ul class="comment-ul" id="ul-comment-' + id + '"></ul>');
+        li.append(String.format('<ul class="comment-ul" id="{0}"></ul>', ulid));
         for (var i in comment.children) {
             if (comment.children.hasOwnProperty(i)) {
-                displayComment($('#ul-comment-' + id), comment.children[i]);
+                displayComment($('#' + ulid), comment.children[i]);
             }
         }
     }
