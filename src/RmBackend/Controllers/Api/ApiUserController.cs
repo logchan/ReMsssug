@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using RmBackend.Access;
 using RmBackend.Framework;
 using RmBackend.Models;
+using RmBackend.Utilities;
 
 namespace RmBackend.Controllers.Api
 {
@@ -45,6 +46,9 @@ namespace RmBackend.Controllers.Api
         {
             var accepted = UserManager.LoginWithCredentials(HttpContext.Session, username, pwdhash, _loginSettings, _context);
 
+            // TODO: this may be insecure...
+            Logger.General?.WriteLine(
+                $"Login from [{NetworkHelper.GetRequestIp(HttpContext)}], username = {username}, pwdhash = {pwdhash}, accpted = {accepted}");
             return Json(accepted);
         }
 
@@ -53,13 +57,19 @@ namespace RmBackend.Controllers.Api
         {
             var token = UserManager.ThirdPartyLogin(itsc, time, hash, _loginSettings, _context);
 
+            Logger.General?.WriteLine(
+                $"Third party login from [{NetworkHelper.GetRequestIp(HttpContext)}], itsc = {itsc}, time = {time}, hash = {hash}, result = {token}");
             return Json(token);
         }
 
         [HttpPost("redeem")]
         public IActionResult RedeemToken(string token)
         {
-            return Json(UserManager.RedeemToken(HttpContext.Session, token, _context));
+            var result = UserManager.RedeemToken(HttpContext.Session, token, _context);
+
+            Logger.General?.WriteLine(
+                $"Token redeem from [{NetworkHelper.GetRequestIp(HttpContext)}], result = {result}");
+            return Json(result);
         }
     }
 }
