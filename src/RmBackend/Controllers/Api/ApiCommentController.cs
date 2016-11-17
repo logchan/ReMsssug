@@ -45,6 +45,7 @@ namespace RmBackend.Controllers.Api
                 return Json("comment disabled");
             }
 
+            var userId = UserManager.GetUser(HttpContext.Session)?.UserId ?? -1;
             var query = from c in _context.Comments
                         where c.EntryNumber == entryId
                         select new CommentData
@@ -57,10 +58,17 @@ namespace RmBackend.Controllers.Api
                             CreateTime = c.CreateTime,
                             ModifyTime = c.ModifyTime,
                             ParentId = c.ParentId,
-                            User = c.IsAnonymous ? null : c.User
+                            // hide user if IsAnonymous and (not logged in or not author)
+                            User = c.IsAnonymous && c.UserId != userId ? null : c.User
                         };
 
-            return Json(query.ToList());
+            var list = query.ToList();
+            if (!entry.AllowPost)
+            {
+                list.Add(null); // use null entry to indicate comment closed
+            }
+
+            return Json(list);
         }
 
         [HttpPost("post")]

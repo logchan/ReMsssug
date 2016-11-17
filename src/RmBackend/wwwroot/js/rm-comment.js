@@ -2,6 +2,7 @@
 var commentReplyTo = 0;
 var commentAreaId = '';
 var commentEntryId = 0;
+var commetnClosed = false;
 
 function disableCommentForm() {
     $('#commentForm :input').prop('disabled', true);
@@ -60,7 +61,13 @@ function postComment() {
         statusCode: {
             401: function() {
                 $('#commentErrMsg').show();
-                $('#commentErrMsg').text('Failed to post comment (not logged in, or session expired). Please login in another page and retry.');
+                $('#commentErrMsg').text('Failed to post comment (not logged in, or session expired). Please login in and retry.');
+                enableCommentForm();
+            },
+            500: function() {
+                $('#commentErrMsg').show();
+                $('#commentErrMsg').text('Failed to post comment (server error)');
+                enableCommentForm();
             }
         }
     });
@@ -82,6 +89,9 @@ function insertCommentInput(area, entryId) {
     form += '<div class="form-group row"><div class="col-md-6">';
     form += '<textarea name="Content" id="commentContent" rows="8" class="form-control" style="resize: none"></textarea>';
     form += '</div></div>';
+    form += '<div class="form-group row"><div class="checkbox col-md-6">';
+    form += '<label for="commentAnonymous"><input type="checkbox" name="IsAnonymous" id="commentAnonymous" class="checkbox" value="true"/>Post as anonymous</label>';
+    form += '</div></div>';
     form += '<div class="form-group row"><div class="col-md-6">';
     form += '<button type="submit" class="btn btn-primary col-md-2">Post</button>';
     form += '</div></div>';
@@ -101,7 +111,12 @@ function displayComment(container, comment) {
     
     var createTime = timestr(comment.CreateTime);
     var modifyTime = timestr(comment.ModifyTime);
-    var user = (comment.User == null ? 'anonymous' : comment.User.Itsc);
+    var user = '';
+    if (comment.IsAnonymous) {
+        user = comment.User == null ? 'anonymous' : String.format('anonymous({0})', comment.User.Itsc);
+    } else {
+        user = comment.User == null ? 'unknown' : comment.User.Itsc;
+    }
 
     var content = String.format('<h4 id="comment-title-{0}"></h4>', id);
     content += String.format('<p class="comment-info">By <span id="comment-itsc-{0}">{1}</span> @ {2}</p>', id, user, createTime);
@@ -110,7 +125,9 @@ function displayComment(container, comment) {
     if (createTime !== modifyTime) {
         content += String.format('<p class="comment-modified">Modified at {0}</p>', modifyTime);
     }
-    content += String.format('<a href="#commentForm" onclick="replyComment({0})">Reply</a>', id);
+
+    if (!commentClosed)
+        content += String.format('<a href="#commentForm" onclick="replyComment({0})">Reply</a>', id);
 
     li.html(content);
     $('#comment-title-' + id).text(comment.Title);
@@ -168,8 +185,17 @@ function initComments(areaId, entryId) {
             if ($.type(data) === 'string') {
                 area.append('<p>' + data + '</p>');
             } else {
+                commentClosed = data.length > 0 && data[data.length - 1] == null;
+                if (commentClosed)
+                    data.pop();
+
                 displayComments(area, data);
-                insertCommentInput(area, entryId);
+
+                if (commentClosed) {
+                    area.append('<p>Comment closed.</p>');
+                } else {
+                    insertCommentInput(area, entryId);
+                }
             }
         });
 }
