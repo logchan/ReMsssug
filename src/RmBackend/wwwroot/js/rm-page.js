@@ -36,6 +36,8 @@
             }
         }
     }
+
+    initComments('commentArea', page.CommentEntryNumber);
 }
 
 function loadData() {

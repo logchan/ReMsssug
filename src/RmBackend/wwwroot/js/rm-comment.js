@@ -60,7 +60,7 @@ function postComment() {
         statusCode: {
             401: function() {
                 $('#commentErrMsg').show();
-                $('#commentErrMsg').text('Failed to post comment. Please login in another page and retry.');
+                $('#commentErrMsg').text('Failed to post comment (not logged in, or session expired). Please login in another page and retry.');
             }
         }
     });
