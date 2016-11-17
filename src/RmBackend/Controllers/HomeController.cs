@@ -13,5 +13,11 @@ namespace RmBackend.Controllers
         {
             return View();
         }
+
+        [HttpGet("login")]
+        public IActionResult Login()
+        {
+            return View();
+        }
     }
 }

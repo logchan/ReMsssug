@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using RmBackend.Access;
 using RmBackend.Data;
 using RmBackend.Framework;
 using RmBackend.Models;
@@ -14,8 +15,11 @@ namespace RmBackend.Controllers.Api
     [RequireLogin(RequireAdmin = true)]
     public class ApiAdminController : RmApiControllerBase
     {
-        public ApiAdminController(RmContext context, IOptions<RmSettings> options) : base(context, options)
+        private RmLoginSettings _loginSettings;
+
+        public ApiAdminController(RmContext context, IOptions<RmSettings> options, IOptions<RmLoginSettings> loginOptions) : base(context, options)
         {
+            _loginSettings = loginOptions.Value;
         }
 
         [HttpGet("updatecoursedata")]
@@ -141,6 +145,28 @@ namespace RmBackend.Controllers.Api
             {
                 // TODO: log
                 return Json("failed");
+            }
+        }
+
+        #endregion
+
+        #region User Login
+
+        [HttpPost("createuserlogin")]
+        public IActionResult CreateUserLogin(int userId, string name, string pwdhash)
+        {
+            try
+            {
+                var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
+                if (user == null)
+                    return Json("user not found");
+
+                UserManager.CreateLoginForUser(user, name, pwdhash, _loginSettings, _context);
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
             }
         }
 

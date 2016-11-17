@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http;
 using RmBackend.Models;
+using RmBackend.Utilities;
+using Microsoft.EntityFrameworkCore;
 
 namespace RmBackend.Access
 {
@@ -31,6 +33,63 @@ namespace RmBackend.Access
             serializer.Serialize(new StringWriter(sb), user);
 
             return sb.ToString();
+        }
+
+        private static void AssignUser(ISession session, User user)
+        {
+            session.SetInt32(UserLoginKey, user.IsAdmin ? 2 : 1);
+            session.SetString(UserEntityKey, SerializeUser(user));
+        }
+
+        private static string HashFromPwdHash(string pwdhash, RmLoginSettings settings)
+        {
+            return CryptoHelper.GetMd5String(
+                CryptoHelper.GetMd5String(pwdhash + settings.HashSalt) + settings.HashSalt
+            );
+        }
+
+        /// <summary>
+        /// Create login for user. Throws exceptions if invalid, username exists or fails
+        /// </summary>
+        public static void CreateLoginForUser(User user, string name, string pwdhash, RmLoginSettings settings, RmContext context)
+        {
+            if (user == null || String.IsNullOrWhiteSpace(name) || String.IsNullOrWhiteSpace(pwdhash))
+                throw new ArgumentNullException();
+
+            var existing = context.UserLogins.FirstOrDefault(u => u.Name == name);
+            if (existing != null)
+                throw new Exception("username exists");
+
+            var hash = HashFromPwdHash(pwdhash, settings);
+            var login = new UserLogin
+            {
+                Name = name,
+                Hash = hash,
+                UserId = user.UserId
+            };
+
+            try
+            {
+                context.UserLogins.Add(login);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("operation failed", ex);
+            }
+        }
+
+        public static bool LoginWithCredentials(ISession session, string name, string pwdhash, RmLoginSettings settings, RmContext context)
+        {
+            var hash = HashFromPwdHash(pwdhash, settings);
+            var login = context.UserLogins.Include(u => u.User).FirstOrDefault(u => u.Name == name && u.Hash == hash);
+
+            if (login?.User != null)
+            {
+                AssignUser(session, login.User);
+                return true;
+            }
+            return false;
         }
 
         public static void Logout(ISession session)
@@ -70,8 +129,7 @@ namespace RmBackend.Access
 
         public static bool IsFullMember(User user)
         {
-            // TODO: for MSSSUG they should have a list of their full members and check it here, but I don't, so just grant everyone full membership
-            return user != null;
+            return user?.IsFullMember ?? false;
         }
 
         public static bool IsFullMember(ISession session)
@@ -80,7 +138,7 @@ namespace RmBackend.Access
         }
 
 #if DEBUG
-        public static void AssignUser(ISession session, User user)
+        public static void AssignUserAdmin(ISession session, User user)
         {
             session.SetInt32(UserLoginKey, 2);
             session.SetString(UserEntityKey, SerializeUser(user));

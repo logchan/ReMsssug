@@ -12,8 +12,11 @@ namespace RmBackend.Controllers.Api
     [Route("api/user")]
     public class ApiUserController : RmApiControllerBase
     {
-        public ApiUserController(RmContext context, IOptions<RmSettings> options) : base(context, options)
+        private RmLoginSettings _loginSettings;
+
+        public ApiUserController(RmContext context, IOptions<RmSettings> options, IOptions<RmLoginSettings> loginOptions) : base(context, options)
         {
+            _loginSettings = loginOptions.Value;
         }
 
         [HttpGet("current")]
@@ -32,6 +35,14 @@ namespace RmBackend.Controllers.Api
             UserManager.Logout(HttpContext.Session);
 
             return Json("success");
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login(string username, string pwdhash)
+        {
+            var accepted = UserManager.LoginWithCredentials(HttpContext.Session, username, pwdhash, _loginSettings, _context);
+
+            return Json(accepted);
         }
     }
 }

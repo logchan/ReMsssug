@@ -33,7 +33,7 @@ namespace RmBackend.Controllers.Api
                 _context.SaveChanges();
             }
 
-            UserManager.AssignUser(HttpContext.Session, user);
+            UserManager.AssignUserAdmin(HttpContext.Session, user);
 
             if (!_context.Courses.Any())
             {
