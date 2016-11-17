@@ -33,6 +33,12 @@ namespace RmBackend.Access
             return sb.ToString();
         }
 
+        public static void Logout(ISession session)
+        {
+            session.SetInt32(UserLoginKey, 0);
+            session.SetString(UserEntityKey, String.Empty);
+        }
+
         public static User GetUser(ISession session)
         {
             var userStr = session.GetString(UserEntityKey);

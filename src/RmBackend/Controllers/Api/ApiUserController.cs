@@ -25,5 +25,13 @@ namespace RmBackend.Controllers.Api
 
             return Json(new {user.UserId, user.Nickname, user.Itsc});
         }
+
+        [HttpGet("logout")]
+        public IActionResult Logout()
+        {
+            UserManager.Logout(HttpContext.Session);
+
+            return Json("success");
+        }
     }
 }
