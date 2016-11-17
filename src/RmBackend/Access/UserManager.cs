@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +21,17 @@ namespace RmBackend.Access
          */
         private const string UserLoginKey = "userLogin";
         private const string UserEntityKey = "userEntity";
+
+        private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        private static object _rndLock = new object();
+        private static Random _rnd = new Random();
+        private static object _loginHashLock = new object();
+        private static List<string> _acceptedHashes = new List<string>();
+        private static object _loginEntryLock = new object();
+        private static List<Tuple<DateTime, string, string>> _thirdPartyLogins = new List<Tuple<DateTime, string, string>>();
+        private static object _userCreationLock = new object();
+        private static Dictionary<string, EventWaitHandle> _creatingUser = new Dictionary<string, EventWaitHandle>();
 
         private static User DeserializeUser(string str)
         {
@@ -90,6 +103,151 @@ namespace RmBackend.Access
                 return true;
             }
             return false;
+        }
+
+        private static string GenerateToken()
+        {
+            var sb = new StringBuilder();
+
+            lock (_rndLock)
+            {
+                for (int i = 0; i < 64; ++i)
+                {
+                    sb.Append(Chars[_rnd.Next(0, Chars.Length - 1)]);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public static string ThirdPartyLogin(string itsc, string timestr, string hash, RmLoginSettings settings, RmContext context)
+        {
+            // verify third party identity
+            DateTime time;
+            if (!DateTime.TryParseExact(timestr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out time))
+            {
+                return "R_INVALID_TIME";
+            }
+
+            var diff = (DateTime.UtcNow - time).TotalSeconds;
+            if (diff < 0)
+            {
+                return "R_FUTURE_TIME";
+            }
+            else if (diff > 10)
+            {
+                return "R_TIME_EXPIRED";
+            }
+
+            var target = CryptoHelper.GetMd5String(itsc + timestr + settings.ThirdPartyPsk);
+            if (hash != target)
+            {
+                return "R_HASH_REJECTED";
+            }
+
+            lock (_loginHashLock)
+            {
+                if (_acceptedHashes.Contains(hash))
+                    return "R_REPLAY";
+
+                _acceptedHashes.Add(hash);
+            }
+
+            var token = GenerateToken();
+            lock (_loginEntryLock)
+            {
+                var tuple = _thirdPartyLogins.FirstOrDefault(t => t.Item2 == itsc);
+                if (tuple != null)
+                    _thirdPartyLogins.Remove(tuple);
+
+                tuple = new Tuple<DateTime, string, string>(time, itsc, token);
+                _thirdPartyLogins.Add(tuple);
+            }
+
+            return token;
+        }
+
+        public static string RedeemToken(ISession session, string token, RmContext context)
+        {
+            Tuple<DateTime, string, string> entry;
+            lock (_loginEntryLock)
+            {
+                entry = _thirdPartyLogins.FirstOrDefault(t => t.Item3 == token);
+                if (entry == null)
+                {
+                    return "invalid token";
+                }
+
+                _thirdPartyLogins.Remove(entry);
+            }
+
+            var diff = (DateTime.UtcNow - entry.Item1).TotalSeconds;
+            if (diff > 120)
+            {
+                return "token expired";
+            }
+
+            var itsc = entry.Item2;
+            var user = context.Users.FirstOrDefault(u => u.Itsc == itsc);
+
+            // create user with itsc if not exist
+            // this complicated logic is to prevent someone from logging in from two places at the same time and get two Users created
+            // this code will not be tested :P
+            if (user == null)
+            {
+                var shallCreate = true;
+                EventWaitHandle handle = null;
+                lock (_userCreationLock)
+                {
+                    if (_creatingUser.ContainsKey(itsc))
+                    {
+                        // Some thread is creating the user. Wait until that thread completes creation and set the handle.
+                        shallCreate = false;
+                        handle = _creatingUser[itsc];
+                    }
+                    else
+                    {
+                        // This is the first thread in the area. Create the handle.
+                        handle = new EventWaitHandle(false, EventResetMode.ManualReset);
+                        _creatingUser[itsc] = handle;
+                    }
+                }
+
+                if (shallCreate)
+                {
+                    try
+                    {
+                        user = new User
+                        {
+                            Itsc = itsc,
+                            Nickname = itsc,
+                            IsAdmin = false,
+                            IsFullMember = true
+                        };
+                        context.Users.Add(user);
+                        context.SaveChanges();
+                    }
+                    catch (Exception)
+                    {
+                        return "server error";
+                    }
+                    finally
+                    {
+                        handle.Set();
+                    }
+                }
+                else
+                {
+                    handle.WaitOne();
+                    user = context.Users.FirstOrDefault(u => u.Itsc == itsc);
+                    if (user == null)
+                        return "server error";
+                }
+            }
+
+            AssignUser(session, user);
+            return "success";
         }
 
         public static void Logout(ISession session)

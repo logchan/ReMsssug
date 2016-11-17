@@ -44,5 +44,19 @@ namespace RmBackend.Controllers.Api
 
             return Json(accepted);
         }
+
+        [HttpPost("login3")]
+        public IActionResult ThirdPartyLogin(string itsc, string time, string hash)
+        {
+            var token = UserManager.ThirdPartyLogin(itsc, time, hash, _loginSettings, _context);
+
+            return Json(token);
+        }
+
+        [HttpPost("redeem")]
+        public IActionResult RedeemToken(string token)
+        {
+            return Json(UserManager.RedeemToken(HttpContext.Session, token, _context));
+        }
     }
 }
