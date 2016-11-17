@@ -10,6 +10,7 @@ using RmBackend.Access;
 using RmBackend.Framework;
 using RmBackend.Models;
 using Microsoft.EntityFrameworkCore;
+using RmBackend.Utilities;
 
 namespace RmBackend.Controllers.Api
 {
@@ -227,9 +228,9 @@ namespace RmBackend.Controllers.Api
 
                 return Json(review.CourseReviewId);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: log exception
+                Logger.Exception?.WriteLine(ex.GetExceptionString("CwikiApi", "AddReview"));
                 return Json("failed");
             }
         }
@@ -267,9 +268,9 @@ namespace RmBackend.Controllers.Api
 
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: log
+                Logger.Exception?.WriteLine(ex.GetExceptionString("CwikiApi", "UpdateReview"));
                 return Json("failed");
             }
 
@@ -299,9 +300,9 @@ namespace RmBackend.Controllers.Api
                 _context.SaveChanges();
                 _context.DisableCommentEntry(review.CommentEntryNumber);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: log
+                Logger.Exception?.WriteLine(ex.GetExceptionString("CwikiApi", "DeleteReview"));
                 return Json("failed");
             }
 

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using RmBackend.Access;
 using RmBackend.Models;
 using RmBackend.Framework;
+using RmBackend.Utilities;
 
 namespace RmBackend.Controllers.Api
 {
@@ -125,9 +126,9 @@ namespace RmBackend.Controllers.Api
 
                 return Json("success");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //TODO: log
+                Logger.Exception?.WriteLine(ex.GetExceptionString("CommentApi", "PostComment"));
                 return Json("failed");
             }
         }
@@ -194,9 +195,9 @@ namespace RmBackend.Controllers.Api
 
                 return Json("success");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //TODO: log
+                Logger.Exception?.WriteLine(ex.GetExceptionString("CommentApi", "UpdateComment"));
                 return Json("failed");
             }
         }
@@ -230,9 +231,9 @@ namespace RmBackend.Controllers.Api
 
                 return Json("success");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //TODO: log
+                Logger.Exception?.WriteLine(ex.GetExceptionString("CommentApi", "DeleteComment"));
                 return Json("failed");
             }
         }
