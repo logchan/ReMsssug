@@ -1,12 +1,81 @@
 ﻿
-function replyComment(id) {
-    
+var commentReplyTo = 0;
+var commentAreaId = '';
+var commentEntryId = 0;
+
+function disableCommentForm() {
+    $('#commentForm :input').prop('disabled', true);
 }
 
-function insertCommentInput(area) {
+function enableCommentForm() {
+    $('#commentForm :input').prop('disabled', false);
+}
+
+function cancelReplyComment() {
+    $('#comment-content-' + commentReplyTo).removeClass('comment-highlight');
+
+    commentReplyTo = 0;
+    $('#commentReplyMsg').hide();
+}
+
+function gotoComment(id) {
+    var targetY = $('#comment-title-' + id).offset().top - 70;
+    window.scrollTo(window.scrollX, targetY);
+}
+
+function replyComment(id) {
+    commentReplyTo = id;
+    $('#comment-content-' + commentReplyTo).addClass('comment-highlight');
+
+    var user = $('#comment-itsc-' + id).text();
+    $('#commentReplyMsg').html(
+            String.format('Replying to <a href="javascript:void(0)" onclick="gotoComment({0})">{1}\'s comment</a>. <a href="javascript:void(0)" onclick="cancelReplyComment()">Cancel</a>', id , user)
+        );
+    $('#commentReplyMsg').show();
+}
+
+function postComment() {
+    var data = $('#commentForm').serialize();
+    disableCommentForm();
+
+    if (commentReplyTo !== 0) {
+        data += '&ParentId=' + commentReplyTo;
+    }
+
+    $.ajax({
+        url: apiserver + '/api/comment/post',
+        method: 'POST',
+        data: data,
+        success: function(data) {
+            if (data === 'success') {
+                $('#commentMsg').show();
+                $('#commentMsg').text('Successfully posted the comment! Refreshing comment area...');
+                setTimeout(function() { initComments(commentAreaId, commentEntryId) }, 1000);
+            } else {
+                $('#commentErrMsg').show();
+                $('#commentErrMsg').text('Failed to post comment: ' + data);
+                enableCommentForm();
+            }
+        },
+        statusCode: {
+            401: function() {
+                $('#commentErrMsg').show();
+                $('#commentErrMsg').text('Failed to post comment. Please login in another page and retry.');
+            }
+        }
+    });
+}
+
+function commentColMd6(inner) {
+    return String.format('<div class="row"><div class="col-md-6">{0}</div></div>', inner);
+}
+
+function insertCommentInput(area, entryId) {
     var form = '<form class="form form-horizontal" id="commentForm" onsubmit="return false">';
-    form += '<div class="row"><div class="col-md-6"><h4>Your comment:</h4></div></div>';
-    form += '<div class="row"><div class="col-md-6"><p id="commentIndicator"></p></div></div>';
+    form += commentColMd6('<h4>Your comment:</h4>');
+    form += commentColMd6('<p class="alert alert-info" id="commentMsg" style="display: none;"></p>');
+    form += commentColMd6('<p class="alert alert-danger" id="commentErrMsg" style="display: none;"></p>');
+    form += commentColMd6('<p class="alert alert-warning" id="commentReplyMsg" style="display: none;"></p>');
     form += '<div class="form-group row"><div class="col-md-6">';
     form += '<input name="Title" id="commentTitle" type="text" class="form-control" placeholder="Title" />';
     form += '</div></div>';
@@ -16,9 +85,11 @@ function insertCommentInput(area) {
     form += '<div class="form-group row"><div class="col-md-6">';
     form += '<button type="submit" class="btn btn-primary col-md-2">Post</button>';
     form += '</div></div>';
+    form += String.format('<input type="hidden" name="EntryNumber" id="commentEntryId" value="{0}" />', entryId);
     form += '</form>';
 
     area.append(form);
+    $('#commentForm').on('submit', postComment);
 }
 
 function displayComment(container, comment) {
@@ -34,12 +105,12 @@ function displayComment(container, comment) {
 
     var content = String.format('<h4 id="comment-title-{0}"></h4>', id);
     content += String.format('<p class="comment-info">By <span id="comment-itsc-{0}">{1}</span> @ {2}</p>', id, user, createTime);
-    content += String.format('<div>{0}</div>', showdownConverter.makeHtml(comment.Content));
+    content += String.format('<div id="comment-content-{0}">{1}</div>', id, showdownConverter.makeHtml(comment.Content));
 
     if (createTime !== modifyTime) {
         content += String.format('<p class="comment-modified">Modified at {0}</p>', modifyTime);
     }
-    content += String.format('<a href="javascript:void(0) onclick="replyComment({0})">Reply</a>', id);
+    content += String.format('<a href="#commentForm" onclick="replyComment({0})">Reply</a>', id);
 
     li.html(content);
     $('#comment-title-' + id).text(comment.Title);
@@ -85,6 +156,10 @@ function displayComments(area, data) {
 }
 
 function initComments(areaId, entryId) {
+    commentAreaId = areaId;
+    commentEntryId = entryId;
+    commentReplyTo = 0;
+
     var area = $('#' + areaId);
     area.empty();
 
@@ -94,7 +169,7 @@ function initComments(areaId, entryId) {
                 area.append('<p>' + data + '</p>');
             } else {
                 displayComments(area, data);
-                insertCommentInput(area);
+                insertCommentInput(area, entryId);
             }
         });
 }

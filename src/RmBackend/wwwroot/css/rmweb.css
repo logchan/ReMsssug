@@ -89,3 +89,7 @@ tr.review-deleted td {
 .comment-modified {
     font-style: italic;
 }
+
+.comment-highlight {
+    background-color: lightgoldenrodyellow;
+}
