@@ -8,6 +8,7 @@ using RmBackend.Access;
 using RmBackend.Data;
 using RmBackend.Framework;
 using RmBackend.Models;
+using RmBackend.Utilities;
 
 namespace RmBackend.Controllers.Api
 {
@@ -81,9 +82,9 @@ namespace RmBackend.Controllers.Api
 
                 return Json(page.PageId);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: log
+                Logger.Exception?.WriteLine(ex.GetExceptionString("AdminApi", "NewPage"));
                 return Json("failed");
             }
         }
@@ -119,9 +120,9 @@ namespace RmBackend.Controllers.Api
 
                 return Json("success");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: log
+                Logger.Exception?.WriteLine(ex.GetExceptionString("AdminApi", "UpdatePage"));
                 return Json("failed");
             }
         }
@@ -141,9 +142,9 @@ namespace RmBackend.Controllers.Api
 
                 return Json("success");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: log
+                Logger.Exception?.WriteLine(ex.GetExceptionString("AdminApi", "DeletePage"));
                 return Json("failed");
             }
         }

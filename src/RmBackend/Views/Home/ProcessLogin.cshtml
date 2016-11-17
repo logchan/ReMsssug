@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Processing your login request...";
+}
+
+<script>
+    $('#pageTitle').text('In a sec...');
+    $('#pageSubtitle').text('Re:MSSSUG');
+    hideMsg();
+</script>
+
+<div style="display: none;">
+    <form id="loginform">
+        <input name="itsc" value="" type="hidden" />
+        <input name="hash" value="" type="hidden" />
+        <input name="time" value="" type="hidden" />
+    </form>
+</div>
+
+<script>
+    var time = '@ViewBag.Time';
+    var itsc = '@ViewBag.Itsc';
+    var hash = '@ViewBag.Hash';
+
+    if (time === '' || hash === '' || itsc === '') {
+        showMsg('Invalid request!', true);
+    } else {
+        showMsg('Step 1/2...');
+        var d1 = {
+            time: time,
+            itsc: itsc,
+            hash: hash
+        };
+
+        $.post(apiserver + '/api/user/login3',
+                $.param(d1),
+                function(r1) {
+                    if (r1.indexOf('R_') === 0) {
+                        showMsg('Login rejected (took too long?) :(', true);
+                    } else {
+                        showMsg('Step 2/2...');
+
+                        $.post(apiserver + '/api/user/redeem',
+                                'token=' + r1,
+                                function(r2) {
+                                    if (r2 === 'success') {
+                                        showMsg('Successfully logged in! You may close this window. If you have another window submitting something, try again.');
+                                    } else {
+                                        showMsg('Failed to login: ' + r2, true);
+                                    }
+                                })
+                            .fail(function() {
+                                showMsg('Failed to perform step 2 :(', true);
+                            });
+                    }
+                })
+            .fail(function() {
+                showMsg('Failed to perform step 1 :(', true);
+            });
+    }
+</script>

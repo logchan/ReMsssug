@@ -228,8 +228,9 @@ namespace RmBackend.Access
                         context.Users.Add(user);
                         context.SaveChanges();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Logger.Exception?.WriteLine(ex.GetExceptionString("UserManager", "RedeemToken CreateUser"));
                         return "server error";
                     }
                     finally
@@ -266,9 +267,9 @@ namespace RmBackend.Access
             {
                 return DeserializeUser(userStr);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: log exception
+                Logger.Exception?.WriteLine(ex.GetExceptionString("UserManager", "GetUser Deserialize"));
                 return null;
             }
         }
