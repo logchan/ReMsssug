@@ -33,6 +33,7 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpGet("get")]
+        [NoCache]
         public IActionResult GetComments(int entryId)
         {
             var entry = _context.CommentEntries.FirstOrDefault(e => e.CommentEntryId == entryId);

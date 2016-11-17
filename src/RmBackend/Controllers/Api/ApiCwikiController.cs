@@ -31,6 +31,7 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpGet("courses")]
+        [NoCache]
         public IActionResult GetCoursesWithReviews()
         {
             var query = from c in _context.Courses
@@ -51,6 +52,7 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpGet("latestreviews")]
+        [NoCache]
         public IActionResult GetLatestReviews()
         {
             var query = from r in _context.CourseReviews
@@ -62,6 +64,7 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpGet("latestcomment")]
+        [NoCache]
         public IActionResult GetLatestComment()
         {
             var cquery = from c in _context.Comments
@@ -101,6 +104,7 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpGet("course")]
+        [NoCache]
         public IActionResult GetByCourse(string param)
         {
             param = param?.Trim();
@@ -125,6 +129,7 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpGet("user")]
+        [NoCache]
         public IActionResult GetByUser(string param)
         {
             param = param?.Trim();

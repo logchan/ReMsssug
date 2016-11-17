@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using RmBackend.Access;
+using RmBackend.Framework;
 using RmBackend.Models;
 
 namespace RmBackend.Controllers.Api
@@ -20,6 +21,7 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpGet("current")]
+        [NoCache]
         public IActionResult CurrentUser()
         {
             var user = UserManager.GetUser(HttpContext.Session);
@@ -30,6 +32,7 @@ namespace RmBackend.Controllers.Api
         }
 
         [HttpGet("logout")]
+        [NoCache]
         public IActionResult Logout()
         {
             UserManager.Logout(HttpContext.Session);
