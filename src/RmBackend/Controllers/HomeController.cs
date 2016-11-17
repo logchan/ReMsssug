@@ -19,5 +19,14 @@ namespace RmBackend.Controllers
         {
             return View();
         }
+
+        [HttpPost("processlogin")]
+        public IActionResult ProcessLogin(string time, string hash, string itsc)
+        {
+            ViewBag.Time = time ?? "";
+            ViewBag.Hash = hash ?? "";
+            ViewBag.Itsc = itsc ?? "";
+            return View();
+        }
     }
 }
