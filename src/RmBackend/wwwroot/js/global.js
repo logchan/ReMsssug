@@ -67,3 +67,30 @@ if (!String.format) {
         });
     };
 }
+
+function confirmLogout() {
+    if (confirm('Do you want to log out?')) {
+        $.get(apiserver + '/api/user/logout',
+                function() {
+                    window.location.reload();
+                })
+            .fail(function() {
+                window.location.reload();
+            });
+    }
+}
+
+function setupUser() {
+    var ul = $('#navbar-right-ul');
+    ul.empty();
+
+    if (userInfo === 'not logged in') {
+        ul.append('<li><a href="/login" target="_blank">Login</a></li>');
+    } else {
+        ul.append(
+            String.format('<li><a href="javascript:void(0)" onclick="confirmLogout()">{0}</a></li>', userInfo.Itsc)
+            );
+    }
+}
+
+loginCheckCallback.push(setupUser);

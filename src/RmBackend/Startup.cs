@@ -48,13 +48,14 @@ namespace RmBackend
             // Settings
             services.AddOptions();
             services.Configure<RmSettings>(Configuration.GetSection("RmSettings"));
+            services.Configure<RmLoginSettings>(Configuration.GetSection("RmLoginSettings"));
 
             // Session
             services.AddDistributedMemoryCache();
             services.AddSession(option =>
             {
                 option.CookieName = "_remsssug_session";
-                option.IdleTimeout = TimeSpan.FromSeconds(600);
+                option.IdleTimeout = TimeSpan.FromSeconds(3600);
             });
         }
 
