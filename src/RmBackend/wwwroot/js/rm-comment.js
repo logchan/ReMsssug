@@ -35,7 +35,22 @@ function replyComment(id) {
     $('#commentReplyMsg').show();
 }
 
+function checkComment() {
+    if ($('#commentContent').get(0).value.trim().length === 0) {
+        $('#commentErrMsg').show();
+        $('#commentErrMsg').text('Content cannot be empty.');
+        return false;
+    }
+    if ($('#commentTitle').get(0).value.trim().length === 0) {
+        $('#commentTitle').get(0).value = 'No title';
+    }
+    return true;
+}
+
 function postComment() {
+    if (!checkComment())
+        return;
+
     var data = $('#commentForm').serialize();
     disableCommentForm();
 

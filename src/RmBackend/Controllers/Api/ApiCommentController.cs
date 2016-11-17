@@ -71,14 +71,36 @@ namespace RmBackend.Controllers.Api
             return Json(list);
         }
 
+        public bool IsValidComment(CommentData data)
+        {
+            if (String.IsNullOrWhiteSpace(data.Title))
+                return false;
+
+            if (String.IsNullOrWhiteSpace(data.Content))
+                return false;
+
+            return true;
+        }
+
         [HttpPost("post")]
         [RequireLogin]
         public IActionResult PostComment(CommentData data)
         {
+            if (!IsValidComment(data))
+            {
+                return Json("invalid comment");
+            }
+
             var entry = _context.CommentEntries.FirstOrDefault(e => e.CommentEntryId == data.EntryNumber);
             if (entry == null || entry.Disabled || !entry.AllowPost)
             {
                 return Json("invalid comment entry");
+            }
+
+            var parent = _context.Comments.FirstOrDefault(c => c.CommentId == data.ParentId);
+            if (parent != null && parent.EntryNumber != entry.CommentEntryId)
+            {
+                return Json("parent not in entry");
             }
 
             try
@@ -135,6 +157,11 @@ namespace RmBackend.Controllers.Api
         [RequireLogin]
         public IActionResult UpdateComment(CommentData data)
         {
+            if (!IsValidComment(data))
+            {
+                return Json("invalid comment");
+            }
+
             var entry = _context.CommentEntries.FirstOrDefault(e => e.CommentEntryId == data.EntryNumber);
             if (entry == null || entry.Disabled || !entry.AllowPost)
             {
