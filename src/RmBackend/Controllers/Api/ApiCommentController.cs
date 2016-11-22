@@ -107,7 +107,7 @@ namespace RmBackend.Controllers.Api
 
             try
             {
-                var time = DateTime.Now;
+                var time = DateTime.UtcNow;
                 var user = UserManager.GetUser(HttpContext.Session);
                 var comment = new Comment
                 {
@@ -190,7 +190,7 @@ namespace RmBackend.Controllers.Api
                 comment.IsAnonymous = data.IsAnonymous;
                 comment.Title = data.Title;
                 comment.Content = data.Content;
-                comment.ModifyTime = DateTime.Now;
+                comment.ModifyTime = DateTime.UtcNow;
                 
                 _context.SaveChanges();
 

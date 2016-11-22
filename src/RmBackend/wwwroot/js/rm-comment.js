@@ -1,5 +1,6 @@
 ﻿
 var commentReplyTo = 0;
+var hightlightedComment = 0;
 var commentAreaId = '';
 var commentEntryId = 0;
 var commetnClosed = false;
@@ -12,9 +13,19 @@ function enableCommentForm() {
     $('#commentForm :input').prop('disabled', false);
 }
 
-function cancelReplyComment() {
-    $('#comment-content-' + commentReplyTo).removeClass('comment-highlight');
+function setCommentHighlight(id) {
+    if (hightlightedComment !== 0) {
+        $('#comment-content-' + hightlightedComment).removeClass('comment-highlight');
+    }
 
+    if (id !== 0) {
+        $('#comment-content-' + id).addClass('comment-highlight');
+        hightlightedComment = id;
+    }
+}
+
+function cancelReplyComment() {
+    setCommentHighlight(0);
     commentReplyTo = 0;
     $('#commentReplyMsg').hide();
 }
@@ -26,7 +37,7 @@ function gotoComment(id) {
 
 function replyComment(id) {
     commentReplyTo = id;
-    $('#comment-content-' + commentReplyTo).addClass('comment-highlight');
+    setCommentHighlight(id);
 
     var user = $('#comment-itsc-' + id).text();
     $('#commentReplyMsg').html(
