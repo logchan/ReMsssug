@@ -49,6 +49,9 @@ function checkLogin() {
 }
 
 function timestr(time) {
+    var date = new Date(Date.parse(time) + 28800000); // to UTC+8
+    time = date.toISOString();
+
     if (time.indexOf('.') > 0)
         time = time.substr(0, time.indexOf('.'));
     time = time.replace('T', ' ');

@@ -69,7 +69,7 @@ namespace RmBackend.Controllers.Api
         {
             try
             {
-                var time = DateTime.Now;
+                var time = DateTime.UtcNow;
                 var page = new Page
                 {
                     CommentEntryNumber = _context.NewCommentEntryNumber(),
@@ -114,7 +114,7 @@ namespace RmBackend.Controllers.Api
                 page.NavbarOrder = np.NavbarOrder;
                 page.ThumbnailImage = np.ThumbnailImage;
                 page.SplashImage = np.SplashImage;
-                page.ModifyTime = DateTime.Now;
+                page.ModifyTime = DateTime.UtcNow;
 
                 _context.SaveChanges();
 

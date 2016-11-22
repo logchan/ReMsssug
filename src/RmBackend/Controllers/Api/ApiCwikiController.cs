@@ -214,7 +214,7 @@ namespace RmBackend.Controllers.Api
 
             try
             {
-                var time = DateTime.Now;
+                var time = DateTime.UtcNow;
                 var review = new CourseReview
                 {
                     CourseId = courseId,
@@ -267,7 +267,7 @@ namespace RmBackend.Controllers.Api
                 AddVersionLog(review);
                 review.Title = title;
                 review.Content = content;
-                review.ModifyTime = DateTime.Now;
+                review.ModifyTime = DateTime.UtcNow;
                 if (review.Status == PostStatus.NeedModification)
                     review.Status = PostStatus.NeedApproval;
 
